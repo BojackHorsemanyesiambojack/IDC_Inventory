@@ -30,21 +30,26 @@ namespace IDC_inventory
             InitializeComponent();
         }
 
-        private void get_data_and_renderize (string table)
+        private void get_data (string table)
         {
                 conn.Open();
                 string sqlGetCommand = $"SELECT Almacen.* FROM Almacen";
                 OleDbDataAdapter adapter = new OleDbDataAdapter(sqlGetCommand, conn);
-                adapter.Fill(data_box);
-                dataGridView1.DataSource = data_box;
+                render_data(adapter);
                 conn.Close();
 
+        }
+
+        private void render_data(OleDbDataAdapter data)
+        {
+            data.Fill(data_box);
+            dataGridView1.DataSource = data_box;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             actualTable = "Almacen";
-            get_data_and_renderize(actualTable);
+            get_data(actualTable);
         }
 
         private void show_insert_data_form ()
