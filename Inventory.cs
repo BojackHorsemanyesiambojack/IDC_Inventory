@@ -33,7 +33,7 @@ namespace IDC_inventory
         private void get_data (string table)
         {
                 conn.Open();
-                string sqlGetCommand = $"SELECT Almacen.* FROM Almacen";
+                string sqlGetCommand = $"SELECT Almacen.* FROM {table};";
                 OleDbDataAdapter adapter = new OleDbDataAdapter(sqlGetCommand, conn);
                 render_data(adapter);
                 conn.Close();
