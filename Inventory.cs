@@ -22,7 +22,6 @@ namespace IDC_inventory
             "Persist Security Info=True");
 
         string actualTable;
-
         DataTable data_box = new DataTable();
 
         public IDC_inventory()
@@ -32,12 +31,29 @@ namespace IDC_inventory
 
         private void get_data (string table)
         {
+                clean_box();
                 conn.Open();
-                string sqlGetCommand = $"SELECT Almacen.* FROM {table};";
+                string sqlGetCommand = $"SELECT * FROM {table};";
                 OleDbDataAdapter adapter = new OleDbDataAdapter(sqlGetCommand, conn);
                 render_data(adapter);
                 conn.Close();
+                
+        }
 
+        private void insert_data(string table)
+        {
+            conn.Open();
+            string sqlInsCommand = $"INSERT INTO {table} ";
+        }
+
+        private void clean_box()
+        {
+            dataGridView1.DataSource = null;
+            data_box.Rows.Clear();
+            data_box.Columns.Clear();
+            dataGridView1.Rows.Clear();
+            dataGridView1.Columns.Clear();
+            dataGridView1.DataSource = data_box;
         }
 
         private void render_data(OleDbDataAdapter data)
@@ -61,6 +77,13 @@ namespace IDC_inventory
         {
             show_insert_data_form();
         }
+
+        private void change_actual_table()
+        {
+            string choosenOption = comboBox1.SelectedItem.ToString();
+            actualTable = choosenOption;
+            get_data(actualTable);
+        }  
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -87,7 +110,7 @@ namespace IDC_inventory
 
         private void label3_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void label4_Click(object sender, EventArgs e)
@@ -96,6 +119,26 @@ namespace IDC_inventory
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            change_actual_table();
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click_1(object sender, EventArgs e)
         {
 
         }
