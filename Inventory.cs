@@ -20,7 +20,6 @@ namespace IDC_inventory
             @"Provider=Microsoft.ACE.OLEDB.12.0;" +
             "Data Source=\"C:\\Users\\LENOVO THINKPAD\\Documents\\IDC inventory\\IDC inventory\\DataBases\\Poo-Inventario.accdb\";" +
             "Persist Security Info=True");
-
         string actualTable;
         DataTable data_box = new DataTable();
 
@@ -42,8 +41,7 @@ namespace IDC_inventory
 
         private void insert_data(string table)
         {
-            conn.Open();
-            string sqlInsCommand = $"INSERT INTO {table} ";
+            
         }
 
         private void clean_box()
@@ -70,7 +68,6 @@ namespace IDC_inventory
 
         private void show_insert_data_form ()
         {
-            formInsert.Visible = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -134,11 +131,6 @@ namespace IDC_inventory
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click_1(object sender, EventArgs e)
         {
 
         }
