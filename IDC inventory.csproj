@@ -142,6 +142,7 @@
     <Content Include="Icons\icons8-add-16.png" />
     <Content Include="Icons\icons8-add-properties-50.png" />
     <Content Include="Icons\icons8-delete-60.png" />
+    <Content Include="Icons\icons8-update-64.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

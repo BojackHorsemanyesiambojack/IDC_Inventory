@@ -27,6 +27,11 @@ namespace IDC_inventory
 
         bool isInsertFormOpen = false;
         string actualClickedRowID;
+        string actualCLickedCellRow;
+        bool isUpdateFormOpen = false;
+        string updateData;
+        string clickedColumnName;
+        string clickedRowIdName;
 
         public IDC_inventory()
         {
@@ -133,6 +138,7 @@ namespace IDC_inventory
 
         private void show_insert_data_form()
         {
+            isUpdateFormOpen = false;
             isInsertFormOpen = true;
             int startX = 10;
             int startY = 10;
@@ -264,6 +270,17 @@ namespace IDC_inventory
                 List<string> dataCollected = collectInfoData();
                 convert_data(dataCollected);
             }
+            if (isUpdateFormOpen)
+            {
+                foreach(Control control in groupBox1.Controls)
+                {
+                    if(control is TextBox textBox)
+                    {
+                        updateData = textBox.Text;
+                        update_data_convert();
+                    }
+                }
+            }
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -271,13 +288,68 @@ namespace IDC_inventory
             int index = e.RowIndex;
             DataGridViewRow selectedRow = dataGridView1.Rows[index];
             actualClickedRowID = selectedRow.Cells[0].Value.ToString();
-            MessageBox.Show(actualClickedRowID);
+            actualCLickedCellRow = selectedRow.Cells[e.ColumnIndex].Value.ToString();
+            clickedColumnName = dataGridView1.Columns[e.ColumnIndex].Name;
+            clickedRowIdName = dataGridView1.Columns[0].Name;
         }
 
         private void pictureBox4_Click(object sender, EventArgs e)
         {
 
             render_delete_info(actualClickedRowID);
+        }
+
+        private void groupBox1_Enter_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void open_update_form()
+        {
+            groupBox1.Controls.Clear();
+            isInsertFormOpen = false;
+            isUpdateFormOpen = true;
+            int startX = 10;
+            int startY = 10;
+            int spacingY = 25;
+
+                Label label = new Label();
+                label.ForeColor = Color.White;
+                label.Text = "Introduzca el valor de reemplazo";
+                label.Location = new System.Drawing.Point(startX, startY + (1 * spacingY));
+                label.AutoSize = true;
+                TextBox textBox = new TextBox();
+                textBox.Name = "actualizador";
+            textBox.Location = new System.Drawing.Point(startX + 180, startY + (1 * spacingY));
+                groupBox1.Controls.Add(label);
+                groupBox1.Controls.Add(textBox);
+
+        }
+
+        private void pictureBox5_Click(object sender, EventArgs e)
+        {
+            open_update_form();
+        }
+
+        private void update_data_convert()
+        {
+            string query = $"UPDATE [{actualTable}] SET [{clickedColumnName}] = {updateData}" +
+                $" WHERE [{clickedRowIdName}] = {actualClickedRowID}";
+            OleDbCommand cmd = new OleDbCommand(query, conn);
+            update_data(cmd);
+            get_data();
+        }
+
+        private void correctData ()
+        {
+
+        }
+
+        private void update_data (OleDbCommand cmd)
+        {
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
         }
     }
 
