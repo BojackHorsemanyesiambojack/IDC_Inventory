@@ -118,6 +118,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="DataBases\Poo-Inventario.laccdb" />
     <None Include="packages.config" />
@@ -138,6 +139,9 @@
     <Content Include="DataBases\Poo-Inventario.accdb">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Icons\icons8-add-16.png" />
+    <Content Include="Icons\icons8-add-properties-50.png" />
+    <Content Include="Icons\icons8-delete-60.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
