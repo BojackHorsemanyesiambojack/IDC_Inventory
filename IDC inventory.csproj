@@ -107,6 +107,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Querys\Querys.cs" />
     <EmbeddedResource Include="Inventory.resx">
       <DependentUpon>Inventory.cs</DependentUpon>
     </EmbeddedResource>
@@ -142,6 +143,12 @@
     <Content Include="Icons\icons8-add-16.png" />
     <Content Include="Icons\icons8-add-properties-50.png" />
     <Content Include="Icons\icons8-delete-60.png" />
+    <Content Include="Icons\icons8-down-button-50.png" />
+    <None Include="Icons\icons8-reload-50.png" />
+    <None Include="Icons\icons8-last-50.png" />
+    <None Include="Icons\icons8-first-50.png" />
+    <Content Include="Icons\icons8-search-50.png" />
+    <None Include="Icons\icons8-up-button-50.png" />
     <Content Include="Icons\icons8-update-64.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

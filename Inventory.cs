@@ -11,6 +11,8 @@ using System.Configuration;
 using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System.Data.OleDb;
+using Mysqlx.Crud;
+using IDC_inventory.Querys;
 
 namespace IDC_inventory
 {
@@ -32,17 +34,29 @@ namespace IDC_inventory
         string updateData;
         string clickedColumnName;
         string clickedRowIdName;
+        string searchData;
+        string actualClickedColumnType;
 
         public IDC_inventory()
         {
             InitializeComponent();
         }
 
-        private void get_data ()
+        private void get_data (string element = "")
         {
                 clean_box();
                 conn.Open();
-                string sqlGetCommand = $"SELECT * FROM {actualTable};";
+                string sqlGetCommand = $"SELECT * FROM {actualTable} ";
+
+                if(element != "")
+                {
+                sqlGetCommand += "WHERE";
+                for(int i = 0; i < actualColumnsInfo.Count(); i++)
+                {
+                    sqlGetCommand += $" [{actualColumnsInfo[i]}] LIKE '%{element}%' OR ";
+                }
+                sqlGetCommand = sqlGetCommand.Remove(sqlGetCommand.Length - 3);
+                }
                 OleDbDataAdapter adapter = new OleDbDataAdapter(sqlGetCommand, conn);
                 OleDbCommand getCommand = new OleDbCommand(sqlGetCommand, conn);
                 if (isInsertFormOpen) updateForm();
@@ -138,6 +152,7 @@ namespace IDC_inventory
 
         private void show_insert_data_form()
         {
+            groupBox1.Controls.Clear();
             isUpdateFormOpen = false;
             isInsertFormOpen = true;
             int startX = 10;
@@ -285,12 +300,22 @@ namespace IDC_inventory
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            int index = e.RowIndex;
-            DataGridViewRow selectedRow = dataGridView1.Rows[index];
-            actualClickedRowID = selectedRow.Cells[0].Value.ToString();
-            actualCLickedCellRow = selectedRow.Cells[e.ColumnIndex].Value.ToString();
-            clickedColumnName = dataGridView1.Columns[e.ColumnIndex].Name;
-            clickedRowIdName = dataGridView1.Columns[0].Name;
+            if (e.RowIndex < 0)
+            {
+                Console.WriteLine("Nel perro");
+            }
+            else {
+
+                DataGridViewRow selectedRow = dataGridView1.Rows[e.RowIndex];
+                if (e.ColumnIndex > 0)
+                {
+                    actualClickedRowID = selectedRow.Cells[0].Value.ToString();
+                    actualCLickedCellRow = selectedRow.Cells[e.ColumnIndex].Value.ToString();
+                    clickedColumnName = dataGridView1.Columns[e.ColumnIndex].Name;
+                    clickedRowIdName = dataGridView1.Columns[0].Name;
+                    actualClickedColumnType = dataGridView1.Columns[e.ColumnIndex].ValueType.ToString();
+                }
+            }
         }
 
         private void pictureBox4_Click(object sender, EventArgs e)
@@ -333,7 +358,13 @@ namespace IDC_inventory
 
         private void update_data_convert()
         {
-            string query = $"UPDATE [{actualTable}] SET [{clickedColumnName}] = {updateData}" +
+            string data = updateData;
+            if (actualClickedColumnType.ToLower().Contains("char") || actualClickedColumnType.ToLower().Contains("string"))
+            {
+                data = $"'{data}'";
+            }
+
+            string query = $"UPDATE [{actualTable}] SET [{clickedColumnName}] = {data}" +
                 $" WHERE [{clickedRowIdName}] = {actualClickedRowID}";
             OleDbCommand cmd = new OleDbCommand(query, conn);
             update_data(cmd);
@@ -350,6 +381,71 @@ namespace IDC_inventory
             conn.Open();
             cmd.ExecuteNonQuery();
             conn.Close();
+        }
+
+        private void pictureBox6_Click(object sender, EventArgs e)
+        {
+            searchElement();
+        }
+
+        private void searchElement()
+        {
+            searchData = search.Text;
+            get_data(searchData);
+        }
+
+        private void groupBox3_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox7_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = dataGridView1;
+
+            int currentColumnIndex = dgv.CurrentCell.ColumnIndex;
+            int currentRowIndex = dgv.CurrentCell.RowIndex;
+
+                if (currentRowIndex + 1 < dgv.Rows.Count)
+                {
+                    dgv.CurrentCell = dgv.Rows[currentRowIndex + 1].Cells[currentColumnIndex];
+                }
+        }
+
+        private void pictureBox11_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = dataGridView1;
+            int counter = dgv.Rows.Count;
+
+            dgv.ClearSelection();
+            dgv.Rows[counter -1].Selected = true;
+        }
+
+        private void pictureBox8_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = dataGridView1;
+
+            int currentColumnIndex = dgv.CurrentCell.ColumnIndex;
+            int currentRowIndex = dgv.CurrentCell.RowIndex;
+
+            if (currentRowIndex - 1 >= 0)
+            {
+                dgv.CurrentCell = dgv.Rows[currentRowIndex - 1].Cells[currentColumnIndex];
+            }
+        }
+
+        private void pictureBox10_Click(object sender, EventArgs e)
+        {
+            DataGridView dgv = dataGridView1;
+
+            dgv.ClearSelection();
+            dgv.Rows[0].Selected = true;
+        }
+
+        private void search_TextChanged(object sender, EventArgs e)
+        {
+            dataGridView1.ClearSelection();
+            searchElement();
         }
     }
 
